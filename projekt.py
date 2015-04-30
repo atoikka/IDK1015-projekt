@@ -53,6 +53,8 @@ def joonista():
 def vali_fail():
     error = False
     fail_nimi = filedialog.askopenfilename();
+    if len(fail_nimi) == 0:
+        return;
     
     # Tühjendada vana punktide list
     tühjenda_väli()
@@ -65,34 +67,35 @@ def vali_fail():
         error = "I/O error({0}): {1}".format(e.errno, e.strerror)
     except:
         error = sys.exc_info()[0]
-    
-    rida = fail.readline().strip()
-    if rida.find(";") != -1:
-        delimiter = ";"
-    elif rida.find(",") != -1:
-        delimiter = ","
-    else:
-        error = "Tundmatu eraldaja (toetatud on koma ja koolon)!"
 
     if error == False:
-        print("Delimiter is " + delimiter)
-        # Leida telgede nimetused
-        telje_nim = rida.split(delimiter)
-        print(str(telje_nim))
-        # Lugeda koordinaadid järgnevatelt ridadelt
-        for rida in fail:
-            coords = rida.strip().split(delimiter)
-            if len(coords) == 2:
-                # Lubada eestipärased ujukomaarvude täiskoha eraldajad
-                coords[0].replace(",", ".")
-                coords[1].replace(",", ".")
-                    
-                print(rida.strip() + " => " + coords[0] + " & " + coords[1])
-                testpunktid_x.append(float(coords[0]))
-                testpunktid_y.append(float(coords[1]))
-            else:
-                error = "Koordinaatide lugemine ebaõnnestus (ebakorrektne formaat)!"
-                break;
+        rida = fail.readline().strip()
+        if rida.find(";") != -1:
+            delimiter = ";"
+        elif rida.find(",") != -1:
+            delimiter = ","
+        else:
+            error = "Tundmatu eraldaja (toetatud on koma ja koolon)!"
+
+        if error == False:
+            print("Delimiter is " + delimiter)
+            # Leida telgede nimetused
+            telje_nim = rida.split(delimiter)
+            print(str(telje_nim))
+            # Lugeda koordinaadid järgnevatelt ridadelt
+            for rida in fail:
+                coords = rida.strip().split(delimiter)
+                if len(coords) == 2:
+                    # Lubada eestipärased ujukomaarvude täiskoha eraldajad
+                    coords[0].replace(",", ".")
+                    coords[1].replace(",", ".")
+                        
+                    print(rida.strip() + " => " + coords[0] + " & " + coords[1])
+                    testpunktid_x.append(float(coords[0]))
+                    testpunktid_y.append(float(coords[1]))
+                else:
+                    error = "Koordinaatide lugemine ebaõnnestus (ebakorrektne formaat)!"
+                    break;
 
     if error == False:
         punktide_arv = len(testpunktid_x)
