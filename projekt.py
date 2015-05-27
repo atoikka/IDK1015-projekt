@@ -87,8 +87,8 @@ def vali_fail():
                 coords = rida.strip().split(delimiter)
                 if len(coords) == 2:
                     # Lubada eestipärased ujukomaarvude täiskoha eraldajad
-                    coords[0].replace(",", ".")
-                    coords[1].replace(",", ".")
+                    coords[0] = coords[0].replace(",", ".")
+                    coords[1] = coords[1].replace(",", ".")
                         
                     print(rida.strip() + " => " + coords[0] + " & " + coords[1])
                     testpunktid_x.append(float(coords[0]))
@@ -105,6 +105,7 @@ def vali_fail():
 
 # Alustada UI loomist
 master = Tk()
+master.title("Punktikuvaja")
 
 w = Canvas(master, width = 600, height = 400)
 w.pack();
