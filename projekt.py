@@ -48,6 +48,32 @@ def joonista():
             string = str(testpunktid_x[i]) + ":" + str(testpunktid_y[i]);
             ui_elemendid.append(w.create_text(x + 2, y + 2, text=string))
 
+# parse_rida
+# Teeb rea kaheks ning üritab lugeda koordinaate.
+def parse_rida(rida, delimiter):
+    coords = rida.strip().split(delimiter)
+    if len(coords) == 2:
+        # Lubada eestipärased ujukomaarvude eraldajad
+        coords[0] = coords[0].replace(",", ".")
+        coords[1] = coords[1].replace(",", ".")
+
+        error = False
+        print(rida.strip() + " => " + coords[0] + " & " + coords[1])
+        try:
+            float_x = float(coords[0])
+        except ValueError:
+            float_x = 0
+            error = "Koordinaatide lugemine ebaõnnestus (pole numbriline väärtus)"
+        try:
+            float_y = float(coords[1])
+        except ValueError:
+            float_y = 0
+            error = "Koordinaatide lugemine ebaõnnestus (pole numbriline väärtus)"
+
+        return [error, float_x, float_y]
+    else:
+        return ["Koordinaatide lugemine ebaõnnestus (ebakorrektne formaat)", 0, 0]
+        
 # vali_fail
 # Annab kasutajale dialoogi faili valimiseks ning valimisel laeb 
 def vali_fail():
@@ -84,18 +110,12 @@ def vali_fail():
             print(str(telje_nim))
             # Lugeda koordinaadid järgnevatelt ridadelt
             for rida in fail:
-                coords = rida.strip().split(delimiter)
-                if len(coords) == 2:
-                    # Lubada eestipärased ujukomaarvude täiskoha eraldajad
-                    coords[0] = coords[0].replace(",", ".")
-                    coords[1] = coords[1].replace(",", ".")
-                        
-                    print(rida.strip() + " => " + coords[0] + " & " + coords[1])
-                    testpunktid_x.append(float(coords[0]))
-                    testpunktid_y.append(float(coords[1]))
-                else:
-                    error = "Koordinaatide lugemine ebaõnnestus (ebakorrektne formaat)!"
-                    break;
+                tulem = parse_rida(rida, delimiter)
+                if tulem[0] is not False:
+                    error = tulem[0]
+                    break
+                testpunktid_x.append(tulem[1])
+                testpunktid_y.append(tulem[2])
 
     if error == False:
         punktide_arv = len(testpunktid_x)
